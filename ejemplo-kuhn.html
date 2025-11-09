@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Condiciones de Karush–Kuhn–Tucker (KKT) — Ejemplo completo</title>
   <link rel="icon" type="image/png" href="Line-Graph_41751.ico">
+  <link rel="stylesheet" href="styles.css">
   <!-- Plotly y MathJax -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script>
@@ -13,27 +14,70 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
-    body { font-family: system-ui, sans-serif; margin: 20px; background:#f5f6fa; color:#222; line-height:1.5 }
-    h1, h2 { color:#222; }
-    code { background:#eee; padding:2px 4px; border-radius:4px; }
-    .plot { width:100%; height:500px; margin:20px 0; }
-    .step { background:#fff; padding:12px 18px; margin:10px 0; border-left:5px solid #337ab7; border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,0.05); }
+    /* Estilos adicionales específicos para este ejemplo */
+    .plot { 
+      width: 100%; 
+      height: 500px; 
+      margin: 20px 0; 
+      border-radius: 10px; 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    }
+    .step { 
+      background: #fff; 
+      padding: 20px; 
+      margin: 15px 0; 
+      border-left: 5px solid #3498db; 
+      border-radius: 10px; 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .step:hover {
+      transform: translateY(-2px);
+    }
+    h2 {
+      color: #2c3e50;
+      font-size: 1.8em;
+      margin: 30px 0 15px 0;
+      text-align: center;
+      position: relative;
+    }
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(135deg, #3498db, #667eea);
+      border-radius: 2px;
+    }
+    code { 
+      background: #f8f9fa; 
+      color: #e74c3c; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      font-family: 'Courier New', monospace;
+    }
   </style>
 </head>
 <body>
-  <h1>Ejemplo: Condiciones de Karush–Kuhn–Tucker (KKT)</h1>
+  <div class="container">
+    <div class="header">
+      <h1>Ejemplo: Condiciones de Karush–Kuhn–Tucker (KKT)</h1>
+    </div>
+    <div class="content">
+      <p>
+        Consideremos el siguiente problema de optimización no lineal con restricciones:
+      </p>
 
-  <p>
-    Consideremos el siguiente problema de optimización no lineal con restricciones:
-  </p>
-
-  <div class="step">
-    <b>Problema:</b><br>
-    Minimizar:
-    $$f(x_1, x_2) = 2x_1^2 + 2x_1x_2 + x_2^2 - 10x_1 - 10x_2$$
-    sujeto a:
-    $$g_1(x) = x_1^2 + x_2^2 - 5 \leq 0, \quad g_2(x) = 3x_1 + x_2 - 6 \leq 0.$$
-  </div>
+      <div class="step">
+        <b>Problema:</b><br>
+        Minimizar:
+        $$f(x_1, x_2) = 2x_1^2 + 2x_1x_2 + x_2^2 - 10x_1 - 10x_2$$
+        sujeto a:
+        $$g_1(x) = x_1^2 + x_2^2 - 5 \leq 0, \quad g_2(x) = 3x_1 + x_2 - 6 \leq 0.$$
+      </div>
 
   <div class="step">
     <b>1️⃣ Gradientes:</b><br>
@@ -80,74 +124,76 @@
     $$
   </div>
 
-  <div class="step">
-    ✅ En este punto, $g_1(x^*) = 0$ y $g_2(x^*) = 0$, por lo tanto ambas restricciones son <b>activas</b>.<br>
-    Los multiplicadores de Lagrange $\mu_1, \mu_2 > 0$.
-  </div>
+      <div class="step">
+        ✅ En este punto, $g_1(x^*) = 0$ y $g_2(x^*) = 0$, por lo tanto ambas restricciones son <b>activas</b>.<br>
+        Los multiplicadores de Lagrange $\mu_1, \mu_2 > 0$.
+      </div>
 
-  <h2>Visualización 2D — Curvas de nivel y restricciones</h2>
-  <div id="plot2d" class="plot"></div>
+      <h2>Visualización 2D — Curvas de nivel y restricciones</h2>
+      <div id="plot2d" class="plot"></div>
 
-  <h2>Visualización 3D — Superficie de \( f(x_1, x_2) \) y punto óptimo</h2>
-  <div id="plot3d" class="plot"></div>
+      <h2>Visualización 3D — Superficie de \( f(x_1, x_2) \) y punto óptimo</h2>
+      <div id="plot3d" class="plot"></div>
 
-  <script>
-    // --- Función objetivo ---
-    function f(x1, x2) {
-      return 2*x1*x1 + 2*x1*x2 + x2*x2 - 10*x1 - 10*x2;
-    }
+      <script>
+        // --- Función objetivo ---
+        function f(x1, x2) {
+          return 2*x1*x1 + 2*x1*x2 + x2*x2 - 10*x1 - 10*x2;
+        }
 
-    const x1 = [], x2 = [];
-    const xmin=-1, xmax=4, ymin=-1, ymax=5, step=0.1;
-    for(let i=xmin;i<=xmax;i+=step)x1.push(i);
-    for(let j=ymin;j<=ymax;j+=step)x2.push(j);
+        const x1 = [], x2 = [];
+        const xmin=-1, xmax=4, ymin=-1, ymax=5, step=0.1;
+        for(let i=xmin;i<=xmax;i+=step)x1.push(i);
+        for(let j=ymin;j<=ymax;j+=step)x2.push(j);
 
-    const Z = [];
-    for(let j=0;j<x2.length;j++){
-      const row=[];
-      for(let i=0;i<x1.length;i++){
-        row.push(f(x1[i], x2[j]));
-      }
-      Z.push(row);
-    }
+        const Z = [];
+        for(let j=0;j<x2.length;j++){
+          const row=[];
+          for(let i=0;i<x1.length;i++){
+            row.push(f(x1[i], x2[j]));
+          }
+          Z.push(row);
+        }
 
-    // Curvas de nivel
-    const contour = {
-      x: x1, y: x2, z: Z,
-      type: 'contour', contours: { coloring: 'heatmap' },
-      name: 'f(x1,x2)', showscale: true
-    };
+        // Curvas de nivel
+        const contour = {
+          x: x1, y: x2, z: Z,
+          type: 'contour', contours: { coloring: 'heatmap' },
+          name: 'f(x1,x2)', showscale: true
+        };
 
-    // Restricciones
-    const g1curve = {x:[], y:[], mode:'lines', type:'scatter', line:{color:'blue',width:2}, name:'g₁(x)=0'};
-    for(let t=0;t<=2*Math.PI;t+=0.02){
-      g1curve.x.push(Math.sqrt(5)*Math.cos(t));
-      g1curve.y.push(Math.sqrt(5)*Math.sin(t));
-    }
-    const g2curve = {x:[0,3], y:[6,-3], mode:'lines', line:{color:'green',width:2}, name:'g₂(x)=0'};
-    const optimum = {x:[0.83], y:[3.51], mode:'markers+text', text:['x*=(0.83,3.51)'], textposition:'bottom center', marker:{size:10,color:'red'}, name:'Óptimo'};
+        // Restricciones
+        const g1curve = {x:[], y:[], mode:'lines', type:'scatter', line:{color:'blue',width:2}, name:'g₁(x)=0'};
+        for(let t=0;t<=2*Math.PI;t+=0.02){
+          g1curve.x.push(Math.sqrt(5)*Math.cos(t));
+          g1curve.y.push(Math.sqrt(5)*Math.sin(t));
+        }
+        const g2curve = {x:[0,3], y:[6,-3], mode:'lines', line:{color:'green',width:2}, name:'g₂(x)=0'};
+        const optimum = {x:[0.83], y:[3.51], mode:'markers+text', text:['x*=(0.83,3.51)'], textposition:'bottom center', marker:{size:10,color:'red'}, name:'Óptimo'};
 
-    Plotly.newPlot('plot2d', [contour, g1curve, g2curve, optimum], {
-      title:'Curvas de nivel y restricciones',
-      xaxis:{title:'x₁'}, yaxis:{title:'x₂'}, hovermode:'closest'
-    });
+        Plotly.newPlot('plot2d', [contour, g1curve, g2curve, optimum], {
+          title:'Curvas de nivel y restricciones',
+          xaxis:{title:'x₁'}, yaxis:{title:'x₂'}, hovermode:'closest'
+        });
 
-    // --- 3D ---
-    const Z3D = Z.map(row => row.slice());
-    const surface = {x:x1, y:x2, z:Z3D, type:'surface', colorscale:'Viridis', opacity:0.9, name:'Superficie f(x)'};
-    const point3D = {x:[0.83], y:[3.51], z:[f(0.83,3.51)], mode:'markers+text', text:['x*'], textposition:'top center', marker:{size:6, color:'red'}, type:'scatter3d', name:'Óptimo'};
-    Plotly.newPlot('plot3d', [surface, point3D], {
-      scene:{xaxis:{title:'x₁'}, yaxis:{title:'x₂'}, zaxis:{title:'f(x)'}},
-      title:'Superficie de f(x₁,x₂) con punto óptimo'
-    });
-  </script>
+        // --- 3D ---
+        const Z3D = Z.map(row => row.slice());
+        const surface = {x:x1, y:x2, z:Z3D, type:'surface', colorscale:'Viridis', opacity:0.9, name:'Superficie f(x)'};
+        const point3D = {x:[0.83], y:[3.51], z:[f(0.83,3.51)], mode:'markers+text', text:['x*'], textposition:'top center', marker:{size:6, color:'red'}, type:'scatter3d', name:'Óptimo'};
+        Plotly.newPlot('plot3d', [surface, point3D], {
+          scene:{xaxis:{title:'x₁'}, yaxis:{title:'x₂'}, zaxis:{title:'f(x)'}},
+          title:'Superficie de f(x₁,x₂) con punto óptimo'
+        });
+      </script>
 
-  <div class="step">
-    <b>Conclusión:</b><br>
-    El punto óptimo $x^* = (0.83, 3.51)$ satisface todas las condiciones KKT.<br>
-    <b>Restricciones activas:</b> $g_1, g_2$.<br>
-    <b>Restricciones inactivas:</b> ninguna.<br>
-    En este punto, el gradiente de la función objetivo es combinación lineal de los gradientes de las restricciones activas.
+      <div class="step">
+        <b>Conclusión:</b><br>
+        El punto óptimo $x^* = (0.83, 3.51)$ satisface todas las condiciones KKT.<br>
+        <b>Restricciones activas:</b> $g_1, g_2$.<br>
+        <b>Restricciones inactivas:</b> ninguna.<br>
+        En este punto, el gradiente de la función objetivo es combinación lineal de los gradientes de las restricciones activas.
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -1,40 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=`, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maximos y minimos sobre restricciones</title>
-        <script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="Line-Graph_41751.ico">
+    <script>
     MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
       svg: { fontCache: 'global' }
     };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* Estilos adicionales específicos para este archivo */
+        .definition {
+            background: #f8f9fa;
+            border-left: 4px solid #2c3e50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .question {
+            background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #e67e22;
+            font-style: italic;
+        }
+        
+        .link-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .link-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Maximos y minimos sobre restricciones</h1>
-    <p>
-        <b>Definiciones a considerar</b>
-    </p>
-    <p>
-        <b>def:</b>
-        Un <b>Conjunto de nivel</b> para un valor constante $c\in R$ se define como
-        $$S_c=\{x\in R^n |f(x)=c\}$$
-        Es decir el conjunto de nivel $S_c$ es el conjunto de todos los puntos en el dominio de $f$ donde la funcion toma el valor $c$. 
-    </p>
-    <p>
-        Para localizar los puntos donde una funcion $f$ alcansza sus valores extremos, no basta con encontrar sus puntos criticos. En la mayoria de los casos, la localicacion de estos de una funcion de $R^n$ a $R$, requiere la localizacion de valores extremos sobre conjuntos mas pequeños, resultando ser los conjuntos de nivelde alguna funcion.
-    
-        Lo interesante de este hecho es que si recordamos que el gradiente de una funcion en un punto $\hat{x_0}$ es ortogonal a la curva de nivel que pasa por dicho punto, podemos deducir que en los puntos donde $f$ alcanza sus valores extremos sobre una curva de nivel de otra funcion $g$, el gradiente de $f$ y el gradiente de $g$ son paralelos.
+    <div class="container">
+        <div class="header">
+            <h1>Máximos y mínimos sobre restricciones</h1>
+        </div>
+        <div class="content">
+            <p>
+                <span class="highlight">Definiciones a considerar</span>
+            </p>
+            
+            <div class="definition">
+                <p>
+                    <b>Definición:</b><br>
+                    Un <span class="highlight">Conjunto de nivel</span> para un valor constante $c\in \mathbb{R}$ se define como
+                    $$S_c=\{x\in \mathbb{R}^n |f(x)=c\}$$
+                    Es decir, el conjunto de nivel $S_c$ es el conjunto de todos los puntos en el dominio de $f$ donde la función toma el valor $c$. 
+                </p>
+            </div>
+            <p>
+                Para localizar los puntos donde una función $f$ alcanza sus valores extremos, no basta con encontrar sus puntos críticos. En la mayoría de los casos, la localización de estos de una función de $\mathbb{R}^n$ a $\mathbb{R}$, requiere la localización de valores extremos sobre conjuntos más pequeños, resultando ser los conjuntos de nivel de alguna función.
+            </p>
+            
+            <p>
+                Lo interesante de este hecho es que si recordamos que el <span class="highlight">gradiente de una función</span> en un punto $\hat{x_0}$ es ortogonal a la curva de nivel que pasa por dicho punto, podemos deducir que en los puntos donde $f$ alcanza sus valores extremos sobre una curva de nivel de otra función $g$, el gradiente de $f$ y el gradiente de $g$ son paralelos.
+            </p>
 
-        Observa la siguiente figura.
-    </p>
-    <img src="curva.png" alt="Curva de nivel y gradientes" />
-    <a href="curvas-y-ej.html">Graficamente</a>
-    <p><i>Por que el gradiente es normal al conjunto de nivel?</i></p>
-    <p>
-        Recodemos que el gradiente de $f$ en un punto $\hat{x_0}$ es un vector que apunta en la direccion de mayor crecimiento de la funcion $f$ en dicho punto. Si consideramos una curva de nivel $S_c$ que pasa por $\hat{x_0}$, todos los puntos de dicha curva cumplen que $f(x)=c$. Por lo tanto, si nos movemos a lo largo de la curva de nivel, el valor de la funcion no cambia. Esto implica que la direccion de mayor crecimiento no puede estar contenida en el plano tangente a la curva de nivel en $\hat{x_0}$, ya que moverse en esa direccion no cambiaria el valor de la funcion. Por lo tanto, el gradiente debe ser ortogonal al plano tangente, y por ende, ortogonal a la curva de nivel en ese punto.
-    </p>
+            <p>Observa la siguiente figura:</p>
+            
+            <div class="image-container">
+                <img src="curva.png" alt="Curva de nivel y gradientes" />
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="curvas-y-ej.html" class="link-button">Ver Gráficamente</a>
+            </div>
+            
+            <div class="question">
+                <p><i>¿Por qué el gradiente es normal al conjunto de nivel?</i></p>
+            </div>
+            
+            <p>
+                Recordemos que el <span class="highlight">gradiente</span> de $f$ en un punto $\hat{x_0}$ es un vector que apunta en la dirección de mayor crecimiento de la función $f$ en dicho punto. Si consideramos una curva de nivel $S_c$ que pasa por $\hat{x_0}$, todos los puntos de dicha curva cumplen que $f(x)=c$. Por lo tanto, si nos movemos a lo largo de la curva de nivel, el valor de la función no cambia. 
+            </p>
+            
+            <p>
+                Esto implica que la dirección de mayor crecimiento no puede estar contenida en el plano tangente a la curva de nivel en $\hat{x_0}$, ya que moverse en esa dirección no cambiaría el valor de la función. Por lo tanto, el gradiente debe ser ortogonal al plano tangente, y por ende, ortogonal a la curva de nivel en ese punto.
+            </p>
+        </div>
+    </div>
 </body>
 </html>

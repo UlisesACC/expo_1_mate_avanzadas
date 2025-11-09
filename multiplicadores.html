@@ -1,52 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ejemplo de multiplicadores de Lagrange</title>
-        <script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="Line-Graph_41751.ico">
+    <script>
     MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
       svg: { fontCache: 'global' }
     };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* Estilos adicionales específicos para este ejemplo */
+        .problem-statement {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #2c3e50;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .solution-step {
+            background: #fff;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid #3498db;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .solution-step:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            background: linear-gradient(120deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .step-title {
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
-<body>
-    <h1>Ejemplo de multiplcadores de lagrange</h1>
-    <p>
-        Una caja rectangular sin tapa debe hacerse con $12m^2$ de material. Determine el volumen maximo de esa caja.
-    </p>
-    <b>Solución</b>
-    <p>
-        Sea $x$ la longitud, $y$ el ancho y $z$ la altura de la caja. Entonces el volumen de la caja es:
-        $$V(x,y,z)=xyz$$
-        La restricción viene dada por el area de la caja:
-        $$A(x,y,z)=xy+2xz+2yz=12$$
-        Planteamos el problema de optimización con restricción:
-        $$\text{Maximizar } V(x,y,z)=xyz$$
-        $$\text{sujeto a } g(x,y,z)=xy+2xz+2yz-12=0$$
-        Usando el metodo de multiplicadores de lagrange se buscan los valores de $x,y,z$ y $\lambda$ tales que:
-        $$\nabla V(x,y,z)=\lambda \nabla g(x,y,z)$$ y $$g(x,y,z)=0$$
-        Calculamos los gradientes:
-        $$V_x=\lambda g_x$$
-        $$V_y=\lambda g_y$$
-        $$V_z=\lambda g_z$$
-        $$g(x,y,z)=0$$
-        Lo que nos da el siguiente sistema de ecuaciones:
-        $$yz=\lambda (y+2z)$$
-        $$xz=\lambda (x+2z)$$
-        $$xy=\lambda (2x+2y)$$
-        $$xy+2xz+2yz=12$$
-        Resolviendo este sistema de ecuaciones, obtenemos:
-        $$xyz=\lambda(2xz+xy)$$
-        $$xyz=\lambda(2yz+xy)$$
-        $$xyz=\lambda(2xz+2yz)$$
-        Entonces $x=y=2z$ obteniendo:
-        $$4z^2+4z^2+4z^2=12$$
-        $$z=\sqrt{1}$$
-        Por lo tanto $x=y=2$ y el volumen maximo es:
-        $$V(2,2,1)=4m^3$$ 
-    </p>
+<<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ejemplo de Multiplicadores de Lagrange</h1>
+        </div>
+        <div class="content">
+            <div class="problem-statement">
+                <div class="step-title">📦 Problema</div>
+                <p>
+                    Una caja rectangular sin tapa debe hacerse con <span class="highlight">$12 m^2$</span> de material. 
+                    Determine el <span class="highlight">volumen máximo</span> de esa caja.
+                </p>
+            </div>
+
+            <div class="solution-step">
+                <div class="step-title">🔧 Planteamiento</div>
+                <p>
+                    Sea $x$ la longitud, $y$ el ancho y $z$ la altura de la caja. Entonces el volumen de la caja es:
+                    $$V(x,y,z) = xyz$$
+                    La restricción viene dada por el área de la caja:
+                    $$A(x,y,z) = xy + 2xz + 2yz = 12$$
+                    Planteamos el problema de optimización con restricción:
+                    $$\text{Maximizar } V(x,y,z) = xyz$$
+                    $$\text{sujeto a } g(x,y,z) = xy + 2xz + 2yz - 12 = 0$$
+                </p>
+            </div>
+
+            <div class="solution-step">
+                <div class="step-title">⚙️ Método de Multiplicadores de Lagrange</div>
+                <p>
+                    Usando el método de multiplicadores de Lagrange se buscan los valores de $x, y, z$ y $\lambda$ tales que:
+                    $$\nabla V(x,y,z) = \lambda \nabla g(x,y,z) \quad \text{y} \quad g(x,y,z) = 0$$
+                    Calculamos los gradientes:
+                    $$V_x = \lambda g_x, \quad V_y = \lambda g_y, \quad V_z = \lambda g_z, \quad g(x,y,z) = 0$$
+                </p>
+            </div>
+
+            <div class="solution-step">
+                <div class="step-title">📊 Sistema de Ecuaciones</div>
+                <p>
+                    Lo que nos da el siguiente sistema de ecuaciones:
+                    $$yz = \lambda (y + 2z)$$
+                    $$xz = \lambda (x + 2z)$$
+                    $$xy = \lambda (2x + 2y)$$
+                    $$xy + 2xz + 2yz = 12$$
+                </p>
+            </div>
+
+            <div class="solution-step">
+                <div class="step-title">🔍 Resolución</div>
+                <p>
+                    Resolviendo este sistema de ecuaciones, obtenemos:
+                    $$xyz = \lambda(2xz + xy)$$
+                    $$xyz = \lambda(2yz + xy)$$
+                    $$xyz = \lambda(2xz + 2yz)$$
+                    Entonces $x = y = 2z$, obteniendo:
+                    $$4z^2 + 4z^2 + 4z^2 = 12$$
+                    $$12z^2 = 12$$
+                    $$z^2 = 1 \Rightarrow z = 1$$
+                    Por lo tanto $x = y = 2$.
+                </p>
+            </div>
+
+            <div class="result">
+                <div class="step-title">✅ Resultado Final</div>
+                <p>
+                    Las dimensiones óptimas de la caja son:
+                    $$x = 2 \text{ m}, \quad y = 2 \text{ m}, \quad z = 1 \text{ m}$$
+                    El <span class="highlight">volumen máximo</span> es:
+                    $$V(2, 2, 1) = 4 \text{ m}^3$$
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

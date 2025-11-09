@@ -1,43 +1,182 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tapa de huevo — superficie 3D y curvas de nivel</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="Line-Graph_41751.ico">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
   <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 12px; background:#f7f7fb; }
-    h1 { font-size:20px; margin:6px 0 10px 0 }
-    #controls { margin-bottom:8px; display:flex; gap:12px; align-items:center; }
-    #container { display:flex; flex-direction:column; gap:12px; }
-    #plot3d { width:100%; height:560px; background:white; border-radius:10px; box-shadow:0 6px 18px rgba(20,20,40,0.08); }
-    #contour2d { width:100%; height:360px; background:white; border-radius:10px; box-shadow:0 6px 18px rgba(20,20,40,0.06); }
-    label { font-size:14px; }
-    input[type=range] { width:300px; }
-    .small { font-size:13px; color:#444 }
-    footer { margin-top:10px; font-size:12px; color:#666 }
+    /* Estilos adicionales específicos para esta visualización */
+    .controls-container {
+      background: #fff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .function-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .slider-control {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 2px solid #e9ecef;
+    }
+    
+    .plots-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .plot {
+      width: 100%;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .plot:hover {
+      transform: translateY(-5px);
+    }
+    
+    #plot3d {
+      height: 600px;
+    }
+    
+    #contour2d {
+      height: 400px;
+    }
+    
+    input[type=range] {
+      width: 200px;
+      height: 6px;
+      border-radius: 3px;
+      background: #ddd;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3498db;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3498db;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    output {
+      background: #3498db;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    code {
+      background: #f8f9fa;
+      color: #e74c3c;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+    
+    .description {
+      color: #6c757d;
+      font-size: 0.9em;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    
+    .instructions {
+      background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 10px;
+      border-left: 5px solid #e67e22;
+      text-align: center;
+      color: #2c3e50;
+    }
+    
+    @media (max-width: 768px) {
+      .controls-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .function-info {
+        min-width: auto;
+      }
+      
+      .slider-control {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Superficie "tapa de huevo" (egg-crate) y sus curvas de nivel</h1>
-  <div id="controls">
-    <div>
-      <label>Función: <code>f(x,y) = x^2 + y^2 + 25(\sin^2 x + \sin^2 y)</code></label>
-      <div class="small">Mueve el deslizador para cambiar el valor de la curva de nivel (z = c).</div>
+  <div class="container">
+    <div class="header">
+      <h1>Superficie "tapa de huevo" y sus curvas de nivel</h1>
     </div>
-    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
-      <label for="levelRange">Nivel (c):</label>
-      <input id="levelRange" type="range" min="0" max="150" step="0.5" value="8">
-      <output id="levelVal">8</output>
+    <div class="content">
+      <div class="controls-container">
+        <div class="function-info">
+          <label><strong>Función:</strong> <code>f(x,y) = x² + y² + 25(sin²x + sin²y)</code></label>
+          <div class="description">
+            Mueve el deslizador para cambiar el valor de la <span class="highlight">curva de nivel</span> (z = c).
+          </div>
+        </div>
+        <div class="slider-control">
+          <label for="levelRange">Nivel (c):</label>
+          <input id="levelRange" type="range" min="0" max="150" step="0.5" value="8">
+          <output id="levelVal">8</output>
+        </div>
+      </div>
+
+      <div class="plots-container">
+        <div id="plot3d" class="plot"></div>
+        <div id="contour2d" class="plot"></div>
+      </div>
+
+      <div class="instructions">
+        <strong>💡 Instrucciones:</strong> Arrastra la vista 3D con el ratón. El punto rojo muestra la intersección aproximada entre la superficie y el plano z = c.
+      </div>
     </div>
   </div>
-
-  <div id="container">
-    <div id="plot3d"></div>
-    <div id="contour2d"></div>
-  </div>
-
-  <footer>Arrastra la vista 3D con el ratón. El punto rojo muestra la intersección aproximada entre la superficie y el plano z = c.</footer>
 
   <script>
     // Genera la malla y calcula f(x,y)
