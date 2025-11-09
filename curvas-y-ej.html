@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tapa de huevo — superficie 3D y curvas de nivel</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 12px; background:#f7f7fb; }
+    h1 { font-size:20px; margin:6px 0 10px 0 }
+    #controls { margin-bottom:8px; display:flex; gap:12px; align-items:center; }
+    #container { display:flex; flex-direction:column; gap:12px; }
+    #plot3d { width:100%; height:560px; background:white; border-radius:10px; box-shadow:0 6px 18px rgba(20,20,40,0.08); }
+    #contour2d { width:100%; height:360px; background:white; border-radius:10px; box-shadow:0 6px 18px rgba(20,20,40,0.06); }
+    label { font-size:14px; }
+    input[type=range] { width:300px; }
+    .small { font-size:13px; color:#444 }
+    footer { margin-top:10px; font-size:12px; color:#666 }
+  </style>
+</head>
+<body>
+  <h1>Superficie "tapa de huevo" (egg-crate) y sus curvas de nivel</h1>
+  <div id="controls">
+    <div>
+      <label>Función: <code>f(x,y) = x^2 + y^2 + 25(\sin^2 x + \sin^2 y)</code></label>
+      <div class="small">Mueve el deslizador para cambiar el valor de la curva de nivel (z = c).</div>
+    </div>
+    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+      <label for="levelRange">Nivel (c):</label>
+      <input id="levelRange" type="range" min="0" max="150" step="0.5" value="8">
+      <output id="levelVal">8</output>
+    </div>
+  </div>
+
+  <div id="container">
+    <div id="plot3d"></div>
+    <div id="contour2d"></div>
+  </div>
+
+  <footer>Arrastra la vista 3D con el ratón. El punto rojo muestra la intersección aproximada entre la superficie y el plano z = c.</footer>
+
+  <script>
+    // Genera la malla y calcula f(x,y)
+    function eggCrate(x,y){
+      return x*x + y*y + 25*(Math.sin(x)*Math.sin(x) + Math.sin(y)*Math.sin(y));
+    }
+
+    // Crear malla
+    const xmin=-6, xmax=6, ymin=-6, ymax=6, step=0.15;
+    const xs = [];
+    for(let x=xmin; x<=xmax+1e-9; x+=step) xs.push(x);
+    const ys = [];
+    for(let y=ymin; y<=ymax+1e-9; y+=step) ys.push(y);
+
+    const Z = [];
+    for(let i=0;i<ys.length;i++){
+      const row=[];
+      for(let j=0;j<xs.length;j++){
+        row.push(eggCrate(xs[j], ys[i]));
+      }
+      Z.push(row);
+    }
+
+    // Datos para la superficie
+    const surface = {
+      x: xs,
+      y: ys,
+      z: Z,
+      type: 'surface',
+      colorscale: 'Viridis',
+      contours: { z: { show: false } },
+      opacity: 0.95,
+      showscale: true
+    };
+
+    // Plano z = c (se actualizará)
+    const plane = {
+      x: [xmin, xmax, xmax, xmin],
+      y: [ymin, ymin, ymax, ymax],
+      z: [[0,0,0,0]], // placeholder
+      type: 'surface',
+      opacity: 0.25,
+      colorscale: [[0,'#ff7f0e'],[1,'#ff7f0e']],
+      showscale: false,
+      hoverinfo:'skip'
+    };
+
+    // Puntos de intersección aproximados (scatter3d)
+    const inter = {
+      x: [], y: [], z: [], mode:'markers', type:'scatter3d', marker:{size:3, color:'red'}, name:'Intersección'
+    };
+
+    // Contorno 2D
+    const contour2d = {
+      x: xs,
+      y: ys,
+      z: Z,
+      type: 'contour',
+      contours: { coloring: 'lines' },
+      line: { width: 1 }
+    };
+
+    // Layout 3D
+    const layout3d = {
+      margin: {l:0,r:0,b:0,t:30},
+      scene: {
+        xaxis: {title:'x'}, yaxis:{title:'y'}, zaxis:{title:'z'},
+        camera: {eye: {x:1.6, y:1.2, z:0.8}}
+      },
+      title: 'Superficie 3D: tapa de huevo'
+    };
+
+    Plotly.newPlot('plot3d', [surface, plane, inter], layout3d, {responsive:true});
+    Plotly.newPlot('contour2d', [contour2d], {margin:{l:40,r:20,t:20,b:40}, title:'Curvas de nivel (proyección)'} , {responsive:true});
+
+    // Función para actualizar plano y puntos de intersección
+    function updateLevel(c){
+      // actualizar plano z-values (cuadrilátero)
+      const planeZ = [[c,c,c,c]];
+      const planeUpdate = { z: [planeZ] };
+
+      // calcular puntos aproximados donde |z-c|<eps
+      const eps = 0.06; // tolerancia para la "curva" discreta
+      const px = [], py = [], pz = [];
+      for(let i=0;i<ys.length;i++){
+        for(let j=0;j<xs.length;j++){
+          const z = Z[i][j];
+          if(Math.abs(z - c) <= eps){
+            px.push(xs[j]); py.push(ys[i]); pz.push(z);
+          }
+        }
+      }
+
+      // update traces: trace index 1 = plane, index 2 = inter
+      Plotly.restyle('plot3d', {z:[planeZ]}, [1]);
+      Plotly.restyle('plot3d', {x:[px], y:[py], z:[pz]}, [2]);
+
+      // actualizar el contour 2D para marcar la línea de nivel con colores
+      // Plotly cannot easily draw an exact level-line overlay; en su lugar dibujamos un scatter 2D (contorno proyectado)
+      const contourXY = {
+        x: px,
+        y: py,
+        mode: 'markers',
+        type: 'scatter',
+        marker:{size:3,color:'red'},
+        name: 'niveles'
+      };
+      Plotly.react('contour2d', [contour2d, contourXY], {margin:{l:40,r:20,t:20,b:40}, title:'Curvas de nivel (proyección)'} );
+    }
+
+    // Inicial
+    const slider = document.getElementById('levelRange');
+    const levelVal = document.getElementById('levelVal');
+    function sync(){
+      const c = parseFloat(slider.value);
+      levelVal.value = c;
+      updateLevel(c);
+    }
+    slider.addEventListener('input', sync);
+
+    // poner valor inicial cercano a la zona baja
+    sync();
+
+    // Resize friendly
+    window.addEventListener('resize', ()=>{
+      Plotly.Plots.resize(document.getElementById('plot3d'));
+      Plotly.Plots.resize(document.getElementById('contour2d'));
+    });
+  </script>
+</body>
+</html>

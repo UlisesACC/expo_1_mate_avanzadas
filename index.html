@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Condiciones de karush kuhn tucker</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <div class="container">
@@ -17,11 +24,22 @@
             <p>Estas condiciones proporcionan un marco teórico fundamental para la optimización con restricciones, estableciendo criterios necesarios que debe cumplir cualquier punto óptimo en problemas de programación matemática.</p>
             
             <p>Se caracteriza por generalizar el metodo de multiplicadores de lagrange, ya que este solo permite restricciones de igualdad.</p>
+            <p>
+                <b>Teorema (Multiplicadores de Lagrange):</b>
+            </p>
+            <p>Sean:
+                <ul>
+                    <li>$g_1,\dots,g_m:U\subset R^m\times R^k\rightarrow R$ funciones de clase $C^1$ en U</li>
+                    <li>$S\subset R^m\times R^k$ el conjunto dado por</li>
+                    $$S=\{(\hat{x},\hat{y})\in U \subset R^m\times R^k|  g_1(\hat{x},\hat{y})=0,\dots,g_m(\hat{x},\hat{y})=0\}$$
+                    <li>$(\hat{x_0},\hat{y_0})\in S$ tal que $\nabla g_1(\hat{x_0},\hat{y_0}),\dots ,\nabla g_m(\hat{x_0},\hat{y_0})$ son linealmente independientes</li> 
+                    Si $f:U\subset R^m\times R^k \rightarrow R$ es una función de clase $C^1$ en U tal que $f$ alcanza un extremo local en $(\hat{x_0},\hat{y_0})$ sobre S, entonces existen $\lambda_1,\dots,\lambda_m\in R$ tales que:
+                    $$\nabla f(\hat{x_0},\hat{y_0})=\sum_{i=1}^{m}\lambda_i\nabla g_i(\hat{x_0},\hat{y_0})$$
+                </ul>
+                <a href="multiplicadores.html">Ejemplo de multiplicadores de lagrange</a>
+                <a href="explicacion.html">Explicacion de funcionamiento</a>
+            </p>
         </div>
-        <p>
-            <b>Teorema:</b>
-            
-        </p>
         
     </div>
 </body>

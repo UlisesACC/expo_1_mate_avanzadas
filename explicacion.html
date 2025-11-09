@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=`, initial-scale=1.0">
+    <title>Maximos y minimos sobre restricciones</title>
+        <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Maximos y minimos sobre restricciones</h1>
+    <p>
+        <b>Definiciones a considerar</b>
+    </p>
+    <p>
+        <b>def:</b>
+        Un <b>Conjunto de nivel</b> para un valor constante $c\in R$ se define como
+        $$S_c=\{x\in R^n |f(x)=c\}$$
+        Es decir el conjunto de nivel $S_c$ es el conjunto de todos los puntos en el dominio de $f$ donde la funcion toma el valor $c$. 
+    </p>
+    <p>
+        Para localizar los puntos donde una funcion $f$ alcansza sus valores extremos, no basta con encontrar sus puntos criticos. En la mayoria de los casos, la localicacion de estos de una funcion de $R^n$ a $R$, requiere la localizacion de valores extremos sobre conjuntos mas pequeños, resultando ser los conjuntos de nivelde alguna funcion.
+    
+        Lo interesante de este hecho es que si recordamos que el gradiente de una funcion en un punto $\hat{x_0}$ es ortogonal a la curva de nivel que pasa por dicho punto, podemos deducir que en los puntos donde $f$ alcanza sus valores extremos sobre una curva de nivel de otra funcion $g$, el gradiente de $f$ y el gradiente de $g$ son paralelos.
+
+        Observa la siguiente figura.
+    </p>
+    <img src="curva.png" alt="Curva de nivel y gradientes" />
+    <a href="curvas-y-ej.html">Graficamente</a>
+    <p><i>Por que el gradiente es normal al conjunto de nivel?</i></p>
+    <p>
+        Recodemos que el gradiente de $f$ en un punto $\hat{x_0}$ es un vector que apunta en la direccion de mayor crecimiento de la funcion $f$ en dicho punto. Si consideramos una curva de nivel $S_c$ que pasa por $\hat{x_0}$, todos los puntos de dicha curva cumplen que $f(x)=c$. Por lo tanto, si nos movemos a lo largo de la curva de nivel, el valor de la funcion no cambia. Esto implica que la direccion de mayor crecimiento no puede estar contenida en el plano tangente a la curva de nivel en $\hat{x_0}$, ya que moverse en esa direccion no cambiaria el valor de la funcion. Por lo tanto, el gradiente debe ser ortogonal al plano tangente, y por ende, ortogonal a la curva de nivel en ese punto.
+    </p>
+</body>
+</html>
