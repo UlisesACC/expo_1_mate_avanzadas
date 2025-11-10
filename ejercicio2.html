@@ -13,6 +13,7 @@
     };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     
     <style>
         /* Estilos específicos para este ejemplo */
@@ -119,6 +120,23 @@
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             text-align: center;
+        }
+
+        .graph-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid #6c757d;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .plot {
+            width: 100%;
+            height: 520px;
+            margin: 15px 0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            overflow: hidden;
         }
     </style>
 </head>
@@ -230,7 +248,107 @@
                     </div>
                 </div>
             </div>
+
+            <hr class="section-divider">
+
+            <div class="graph-box">
+                <h2><b>Resultado gráfico</b></h2>
+                <p>El resultado gráfico es el siguiente:</p>
+                <div id="plot2d" class="plot"></div>
+
+                <p>
+                    $$f(x_1, x_2) = 0.25x_1^2 + x_2^2, \qquad f^* = 7.8125$$
+                </p>
+                <p>
+                    \(\nabla f = (0.5x_1,\; 2x_2)\) en \((2.5,2.5) = (1.25,\; 5)\), \quad
+                    \(\nabla w = (-1,\; -1)\), \quad
+                    \(\nabla g = (1,\; 0.2)\).
+                </p>
+                <p>
+                    Verificación KKT en \(x^*=(2.5,2.5)\):
+                    $$\nabla f + \lambda\,\nabla w + \mu\,\nabla g = (0,0),\qquad \lambda=5.9375,\; \mu=4.6875.$$
+                </p>
+            </div>
         </div>
     </div>
+
+    <script>
+        // --- Definición de la función objetivo ---
+        function f(x1, x2) {
+            return 0.25*x1*x1 + x2*x2;
+        }
+
+        // Rango y malla
+        const xmin = -1, xmax = 6, ymin = -1, ymax = 8, step = 0.05;
+        const X = [], Y = [];
+        for (let x = xmin; x <= xmax; x += step) X.push(+x.toFixed(2));
+        for (let y = ymin; y <= ymax; y += step) Y.push(+y.toFixed(2));
+
+        const Z = [];
+        for (let j = 0; j < Y.length; j++) {
+            const row = [];
+            for (let i = 0; i < X.length; i++) row.push(f(X[i], Y[j]));
+            Z.push(row);
+        }
+
+        // Curvas de nivel de f
+        const contour = {
+            x: X,
+            y: Y,
+            z: Z,
+            type: 'contour',
+            contours: { coloring: 'lines', showlabels: true, labelfont: { size: 10, color: '#2c3e50' } },
+            line: { width: 1, color: 'rgba(52,58,64,0.6)' },
+            name: 'f(x₁,x₂)'
+        };
+
+        // Restricciones w(x)=0: 5 - x1 - x2 = 0  =>  x2 = 5 - x1
+        const wLine = { x: [], y: [], mode: 'lines', type: 'scatter', line: { color: '#2ecc71', width: 3 }, name: 'w(x)=0' };
+        for (let x = xmin; x <= xmax; x += 0.02) { wLine.x.push(x); wLine.y.push(5 - x); }
+
+        // Restricción g(x)=0: x1 + 0.2 x2 - 3 = 0  =>  x2 = (3 - x1)/0.2 = 15 - 5x1
+        const gLine = { x: [], y: [], mode: 'lines', type: 'scatter', line: { color: '#e67e22', width: 3 }, name: 'g(x)=0' };
+        for (let x = xmin; x <= xmax; x += 0.02) { gLine.x.push(x); gLine.y.push(15 - 5*x); }
+
+        // Punto óptimo
+        const xStar = 2.5, yStar = 2.5, fStar = f(xStar, yStar);
+        const optimum = {
+            x: [xStar], y: [yStar], mode: 'markers+text', type: 'scatter',
+            text: [`x* = (2.5, 2.5)\n f* = ${fStar.toFixed(4)}`], textposition: 'bottom right',
+            marker: { size: 10, color: '#e74c3c' }, name: 'Óptimo'
+        };
+
+        // Vectores gradiente en el punto óptimo (escalados para visualización)
+        const gradF = [0.5*xStar, 2*yStar];     // (1.25, 5)
+        const gradW = [-1, -1];                 // (-1, -1)
+        const gradG = [1, 0.2];                 // (1, 0.2)
+        const s = 0.5; // factor de escala para visualizar
+
+        function arrowTrace(origin, vec, color, name) {
+            return {
+                x: [origin[0], origin[0] + s*vec[0]],
+                y: [origin[1], origin[1] + s*vec[1]],
+                mode: 'lines+markers', type: 'scatter',
+                line: { color, width: 3 }, marker: { size: 6, color }, name
+            };
+        }
+
+        const vfTrace = arrowTrace([xStar, yStar], gradF, '#8e44ad', '∇f');
+        const vwTrace = arrowTrace([xStar, yStar], gradW, '#16a085', '∇w');
+        const vgTrace = arrowTrace([xStar, yStar], gradG, '#d35400', '∇g');
+
+        const layout = {
+            title: 'Curvas de nivel y restricciones',
+            xaxis: { title: 'x₁', range: [xmin, xmax], zeroline: true, zerolinecolor: '#999' },
+            yaxis: { title: 'x₂', range: [ymin, ymax], zeroline: true, zerolinecolor: '#999' },
+            legend: { orientation: 'h', x: 0.02, y: 1.08 },
+            margin: { l: 50, r: 20, t: 50, b: 40 }
+        };
+
+        Plotly.newPlot('plot2d', [contour, wLine, gLine, optimum, vfTrace, vwTrace, vgTrace], layout, {displayModeBar: true, responsive: true});
+
+        // Redimensionamiento responsivo
+        window.addEventListener('resize', () => Plotly.Plots.resize(document.getElementById('plot2d')));
+    </script>
 </body>
 </html>
