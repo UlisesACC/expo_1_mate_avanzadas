@@ -1,203 +1,553 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Condiciones de karush kuhn tucker</title>
-    <link rel="stylesheet" href="styles.css">
-    <!--icono que va alado del title -->
+    <title>Portada - Matemáticas Avanzadas</title>
     <link rel="icon" type="image/png" href="Line-Graph_41751.ico">
-    <script>
-    MathJax = {
-      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  
-  <style>
-    /* Estilos específicos para mejorar el diseño del index */
-    .theorem-box {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      border-left: 5px solid #2c3e50;
-      padding: 25px;
-      margin: 25px 0;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      position: relative;
-    }
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
-    .theorem-box::before {
-      content: "📐";
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 24px;
-    }
-    
-    .definition-box {
-      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-      border-left: 5px solid #f39c12;
-      padding: 25px;
-      margin: 25px 0;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    
-    .definition-box::before {
-      content: "📝";
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 24px;
-    }
-    
-    .nav-links {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin: 20px 0;
-    }
-    
-    .nav-link {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-      padding: 12px 24px;
-      text-decoration: none;
-      border-radius: 25px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-      font-weight: 500;
-    }
-    
-    .nav-link:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-      color: white;
-      text-decoration: none;
-    }
-    
-    .nav-link.example {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-    }
-    
-    .nav-link.example:hover {
-      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-    }
-    
-    .references-box {
-      background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-      border-left: 5px solid #17a2b8;
-      padding: 20px;
-      margin: 25px 0;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    
-    .external-link {
-      color: #3498db;
-      text-decoration: none;
-      border-bottom: 1px dotted #3498db;
-      transition: all 0.3s ease;
-    }
-    
-    .external-link:hover {
-      color: #2980b9;
-      border-bottom: 1px solid #2980b9;
-      text-decoration: none;
-    }
-    
-    ul li {
-      margin: 10px 0;
-      line-height: 1.6;
-    }
-    
-    .intro-text {
-      font-size: 1.1em;
-      line-height: 1.7;
-      color: #444;
-      margin-bottom: 25px;
-    }
-    
-    .section-divider {
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #3498db, transparent);
-      margin: 40px 0;
-      border: none;
-    }
-  </style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e3f2fd 0%, #90caf9 30%, #42a5f5 60%, #1e88e5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animación de fondo con formas geométricas */
+        .background-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            background: white;
+            top: 70%;
+            right: 10%;
+            animation-delay: 2s;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+        }
+        
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: white;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 4s;
+            transform: rotate(45deg);
+        }
+        
+        .shape:nth-child(4) {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            top: 30%;
+            right: 20%;
+            animation-delay: 1s;
+        }
+        
+        .shape:nth-child(5) {
+            width: 90px;
+            height: 90px;
+            background: white;
+            top: 50%;
+            left: 5%;
+            animation-delay: 3s;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+        
+        /* Contenedor principal con grid */
+        .portada-container {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+            max-width: 100%;
+            width: 95%;
+            height: 100vh;
+            animation: slideIn 1s ease-out;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        /* Columna izquierda - Información */
+        .info-section {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow-y: auto;
+        }
+        
+        /* Columna derecha - Imagen */
+        .image-section {
+            background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 400%;
+            height: 400%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .meme-image {
+            max-width: 95%;
+            max-height: 95%;
+            width: 1000px;
+            height: 1000px;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s ease;
+            position: relative;
+            z-index: 1;
+            animation: float-image 4s ease-in-out infinite;
+        }
+        
+        .image-section p {
+            color: #0d47a1;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes float-image {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.02);
+            }
+        }
+        
+        .meme-image:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Logo del IPN */
+        .logo-container {
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #8B1538, #C41E3A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(139, 21, 56, 0.4);
+        }
+        
+        /* Título principal */
+        h1 {
+            font-size: 2.8em;
+            background: linear-gradient(135deg, #1976d2, #64b5f6, #0d47a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Subtítulo */
+        h2 {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin: 15px 0 30px 0;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #1976d2, #64b5f6);
+            border-radius: 2px;
+        }
+        
+        /* Sección de equipo */
+        .team-section {
+            margin-top: 30px;
+        }
+        
+        .team-title {
+            font-size: 1.3em;
+            color: #34495e;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .team-members {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .member {
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 5px solid #1976d2;
+            border-right: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2196f3, #64b5f6);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+        
+        .member::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            border-radius: 50%;
+        }
+        
+        .member:hover {
+            transform: translateY(-15px) rotateY(5deg) scale(1.08);
+            box-shadow: 0 20px 50px rgba(33, 150, 243, 0.4);
+            border-right: 5px solid #64b5f6;
+        }
+        
+        .member:hover::before {
+            opacity: 0.15;
+        }
+        
+        .member:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .member-name {
+            font-size: 1.1em;
+            color: #0d47a1;
+            font-weight: 600;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .member:hover .member-name {
+            color: #1976d2;
+            transform: scale(1.05);
+        }
+        
+        /* Botón de navegación */
+        .nav-button {
+            margin-top: 30px;
+        }
+        
+        .btn-inicio {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #1976d2, #2196f3, #42a5f5);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-inicio::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-inicio:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-inicio:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(33, 150, 243, 0.6);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-inicio span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Footer decorativo */
+        .footer-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0.3;
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .portada-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                min-height: auto;
+            }
+            
+            .info-section {
+                padding: 40px 30px;
+            }
+            
+            .image-section {
+                min-height: 400px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            h2 {
+                font-size: 1.4em;
+            }
+            
+            .team-members {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+            }
+            
+            .meme-image {
+                object-fit: contain;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Condiciones de Karush-Kuhn-Tucker</h1>
-        </div>
-        <div class="content">
-            <p class="intro-text">Las <span class="highlight">condiciones de Karush-Kuhn-Tucker (KKT)</span>, comúnmente conocidas como <span class="highlight">condiciones de KKT</span>, son pruebas de primera derivada; para que una solución de programación no lineal sea óptima, siempre que se cumplan las condiciones de <i>regularidad</i>.</p>
-            <a href="https://en-wikipedia-org.translate.goog/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc" target="_blank" class="external-link">
-                (Contributors to Wikimedia projects, 2025)
-            </a>
-            <p>Estas condiciones proporcionan un marco teórico fundamental para la optimización con restricciones, estableciendo criterios necesarios que debe cumplir cualquier punto óptimo en problemas de programación matemática.</p>
+    <!-- Formas geométricas animadas de fondo -->
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <!-- Contenedor principal de la portada -->
+    <div class="portada-container">
+        <!-- Sección izquierda - Información -->
+        <div class="info-section">
+            <!-- Logo IPN -->
+            <div class="logo-container">
+                <div class="logo">IPN</div>
+            </div>
             
-            <p>Se caracteriza por generalizar el metodo de multiplicadores de lagrange, ya que este solo permite restricciones de igualdad.</p>
-
-            <hr class="section-divider">
-
-            <div class="theorem-box">
-                <p><b>Teorema (Multiplicadores de Lagrange):</b></p>
-                <p>Sean:
-                    <ul>
-                        <li>$g_1,\dots,g_m:U\subset R^m\times R^k\rightarrow R$ funciones de clase $C^1$ en U</li>
-                        <li>$S\subset R^m\times R^k$ el conjunto dado por</li>
-                        $$S=\{(\hat{x},\hat{y})\in U \subset R^m\times R^k|  g_1(\hat{x},\hat{y})=0,\dots,g_m(\hat{x},\hat{y})=0\}$$
-                        <li>$(\hat{x_0},\hat{y_0})\in S$ tal que $\nabla g_1(\hat{x_0},\hat{y_0}),\dots ,\nabla g_m(\hat{x_0},\hat{y_0})$ son linealmente independientes</li> 
-                        Si $f:U\subset R^m\times R^k \rightarrow R$ es una función de clase $C^1$ en U tal que $f$ alcanza un extremo local en $(\hat{x_0},\hat{y_0})$ sobre S, entonces existen $\lambda_1,\dots,\lambda_m\in R$ tales que:
-                        $$\nabla f(\hat{x_0},\hat{y_0})=\sum_{i=1}^{m}\lambda_i\nabla g_i(\hat{x_0},\hat{y_0})$$
-                    </ul>
-                    (Perez Cardenas, 2021)
-                </p>
-                
-                <div class="nav-links">
-                    <a href="multiplicadores.html" class="nav-link">Ejemplo de multiplicadores de lagrange</a>
-                    <a href="explicacion.html" class="nav-link">Explicacion de funcionamiento</a>
-                </div>
+            <!-- Título principal -->
+            <h1>Matemáticas Avanzadas</h1>
+            
+            <!-- Subtítulo con institución -->
+            <h2>Instituto Politécnico Nacional</h2>
+            
+            <!-- Sección del equipo -->
+            <div class="team-section">
+                <div class="team-title">Presentado por:</div>
+                <ul class="team-members">
+                    <li class="member animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                        <p class="member-name">Ulises Abdiel Cabello Cárdenas</p>
+                    </li>
+                    <li class="member animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                        <p class="member-name">Fernando Arriaga Castro</p>
+                    </li>
+                </ul>
             </div>
-
-            <hr class="section-divider">
-
-            <div class="definition-box">
-                <p><b>Definicion:</b></p>
-                <p>Sea $x^*$ que satisface las siguientes condiciones:
-                $$h(x^*)=0,g(x^*)\leq 0$$
-                y sea $J$ el conjunto de indices $j$ para los cuales $g(x)=0$. Entonces se dice que $x$ es un punto regular de las restricciones anteriores, si los vectores gradiente $\nabla h_i(x^*), \nabla g_j(x^*), 1\leq i\leq m,j \in J$ son linealmente independientes.</p>
-
-                <p>$$\text{min} f(x)$$
-                sujeto a:
-                $$h(x)=0,g(x)\leq 0$$
-                y supongamos que $x^*$ es un punto regular para las restricciones anteriores. Entonces hay un vector $\lambda \in E^m$ y un vector $\mu \in E^p$ con $\mu \geq 0$ tal que:
-                $$\nabla f(x^*)+\sum_{i=1}^{m}\lambda_i^T\nabla h_i(x^*)+\sum_{j=1}^{p}\mu_j^T\nabla g_j(x^*)=0$$
-                $$\mu_j^Tg_j(x^*)=0, j=1,2,\dots,p$$</p>
-                (Luenberger & Ye, 2008)
-                <div class="nav-links">
-                    <a href="ejercicio2.html" class="nav-link example">Ejemplo con kuhn-Tucker</a>
-                </div>
+            
+            <!-- Botón de navegación -->
+            <div class="nav-button">
+                <a href="inicio.html" class="btn-inicio animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
+                    <span>Comenzar →</span>
+                </a>
             </div>
-            <div>
-                <h2>Aplicaciones:</h2>
-
-            </div>
-            <div class="references-box">
-                <p><b>Referencias:</b><br>
-                Perez Cardenas, J. (2021). Calculo diferencial de varias variables: Vol. Capitulo 5 (Segunda edicion).
-            </p>
-            <p>
-                Luenberger, D. G., & Ye, Y. (2008). Linear and Nonlinear Programming. Springer Science & Business Media.
-            </p>
-            </div>
+        </div>
+        
+        <!-- Sección derecha - Imagen del meme -->
+        <div class="image-section animate__animated animate__fadeInRight" style="animation-delay: 0.3s;">
+            <img src="memin.png" alt="Matemáticas Avanzadas" class="meme-image">
         </div>
     </div>
+
+    <script>
+        // Agregar efectos de anime.css adicionales al hacer hover
+        document.querySelectorAll('.member').forEach((card, index) => {
+            card.addEventListener('mouseenter', function() {
+                this.classList.add('animate__animated', 'animate__pulse');
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('animate__pulse');
+            });
+            
+            // Efecto de flip al hacer click
+            card.addEventListener('click', function() {
+                this.classList.add('animate__animated', 'animate__flipInY');
+                setTimeout(() => {
+                    this.classList.remove('animate__flipInY');
+                }, 1000);
+            });
+        });
+        
+        // Efecto en el botón de inicio
+        const btnInicio = document.querySelector('.btn-inicio');
+        btnInicio.addEventListener('mouseenter', function() {
+            this.classList.add('animate__animated', 'animate__heartBeat');
+        });
+        
+        btnInicio.addEventListener('mouseleave', function() {
+            this.classList.remove('animate__heartBeat');
+        });
+    </script>
 </body>
 </html>
