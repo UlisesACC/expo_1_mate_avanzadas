@@ -27,14 +27,6 @@
             position: relative;
         }
         
-        .problem-box::before {
-            content: "📊";
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-        }
-        
         .lagrange-box {
             background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             border-left: 5px solid #f39c12;
@@ -45,14 +37,6 @@
             position: relative;
         }
         
-        .lagrange-box::before {
-            content: "⚙️";
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-        }
-        
         .conditions-box {
             background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
             border-left: 5px solid #17a2b8;
@@ -61,14 +45,6 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
-        }
-        
-        .conditions-box::before {
-            content: "🔍";
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
         }
         
         .condition-item {
@@ -93,14 +69,6 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
-        }
-        
-        .solution-box::before {
-            content: "🔧";
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
         }
         
         .case-box {
@@ -132,11 +100,12 @@
         }
         .plot {
             width: 100%;
-            height: 520px;
+            height: 580px;
             margin: 15px 0;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.12);
             overflow: hidden;
+            background: white;
         }
     </style>
 </head>
@@ -257,11 +226,11 @@
                 <div id="plot2d" class="plot"></div>
 
                 <p>
-                    $$f(x_1, x_2) = 0.25x_1^2 + x_2^2, \qquad f^* = 7.8125$$
+                    $$f(x_1, x_2) = 0.25x_1^2 + x_2^2,  f^* = 7.8125$$
                 </p>
                 <p>
-                    \(\nabla f = (0.5x_1,\; 2x_2)\) en \((2.5,2.5) = (1.25,\; 5)\), \quad
-                    \(\nabla w = (-1,\; -1)\), \quad
+                    \(\nabla f = (0.5x_1,\; 2x_2)\) en \((2.5,2.5) = (1.25,\; 5)\), 
+                    \(\nabla w = (-1,\; -1)\), 
                     \(\nabla g = (1,\; 0.2)\).
                 </p>
                 <p>
@@ -291,20 +260,31 @@
             Z.push(row);
         }
 
-        // Curvas de nivel de f con colores
+        // Curvas de nivel de f (solo líneas, sin relleno)
         const contour = {
             x: X,
             y: Y,
             z: Z,
             type: 'contour',
             contours: { 
-                coloring: 'heatmap',
+                coloring: 'lines',
                 showlabels: true, 
-                labelfont: { size: 11, color: 'white' }
+                labelfont: { 
+                    size: 12, 
+                    color: '#2c3e50',
+                    family: 'Arial',
+                    weight: 'bold'
+                },
+                start: 0,
+                end: 50,
+                size: 5
             },
-            colorscale: 'Jet',
-            showscale: true,
-            name: 'f(x₁,x₂)',
+            line: {
+                color: '#7f8c8d',
+                width: 1.5
+            },
+            showscale: false,
+            name: 'Curvas de nivel f(x₁,x₂)',
             hovertemplate: 'x₁: %{x}<br>x₂: %{y}<br>f: %{z:.2f}<extra></extra>'
         };
 
@@ -313,8 +293,8 @@
             x: [], y: [], 
             mode: 'lines', 
             type: 'scatter', 
-            line: { color: '#000000', width: 3, dash: 'solid' }, 
-            name: 'w(x)=0 (5-x₁-x₂=0)'
+            line: { color: '#e74c3c', width: 4, dash: 'solid' }, 
+            name: 'w(x)=0: 5-x₁-x₂=0'
         };
         for (let x = xmin; x <= xmax; x += 0.02) { 
             wLine.x.push(x); 
@@ -326,8 +306,8 @@
             x: [], y: [], 
             mode: 'lines', 
             type: 'scatter', 
-            line: { color: '#000000', width: 3, dash: 'dash' }, 
-            name: 'g(x)=0 (x₁+0.2x₂-3=0)'
+            line: { color: '#2ecc71', width: 4, dash: 'dash' }, 
+            name: 'g(x)=0: x₁+0.2x₂-3=0'
         };
         for (let x = xmin; x <= xmax; x += 0.02) { 
             const y2 = 15 - 5*x;
@@ -343,59 +323,92 @@
             x: [xStar], y: [yStar], 
             mode: 'markers+text', 
             type: 'scatter',
-            text: [`(2.5, 2.5)`], 
-            textposition: 'top right',
-            textfont: { size: 14, color: '#000000', family: 'Arial Black' },
-            marker: { size: 12, color: '#FF0000', symbol: 'circle', line: { color: '#000000', width: 2 } }, 
-            name: 'x* óptimo'
+            text: ['x* = (2.5, 2.5)'], 
+            textposition: 'top center',
+            textfont: { 
+                size: 13, 
+                color: '#c0392b', 
+                family: 'Arial',
+                weight: 'bold'
+            },
+            marker: { 
+                size: 14, 
+                color: '#e74c3c', 
+                symbol: 'circle', 
+                line: { color: '#c0392b', width: 3 } 
+            }, 
+            name: 'Punto óptimo',
+            hovertemplate: `x* = (${xStar}, ${yStar})<br>f* = ${fStar.toFixed(4)}<extra></extra>`
         };
 
         // Vectores gradiente en el punto óptimo (escalados para visualización)
         const gradF = [0.5*xStar, 2*yStar];     // (1.25, 5)
         const gradW = [-1, -1];                 // (-1, -1)
         const gradG = [1, 0.2];                 // (1, 0.2)
-        const s = 0.6; // factor de escala para visualizar
+        const s = 0.7; // factor de escala para visualizar
 
         function arrowTrace(origin, vec, color, name) {
             const endX = origin[0] + s*vec[0];
             const endY = origin[1] + s*vec[1];
             
+            // Calcular dirección para la flecha
+            const dx = endX - origin[0];
+            const dy = endY - origin[1];
+            const angle = Math.atan2(dy, dx);
+            const arrowSize = 0.15;
+            
+            // Puntos de la punta de flecha
+            const arrowX1 = endX - arrowSize * Math.cos(angle - Math.PI/6);
+            const arrowY1 = endY - arrowSize * Math.sin(angle - Math.PI/6);
+            const arrowX2 = endX - arrowSize * Math.cos(angle + Math.PI/6);
+            const arrowY2 = endY - arrowSize * Math.sin(angle + Math.PI/6);
+            
             return {
-                x: [origin[0], endX],
-                y: [origin[1], endY],
+                x: [origin[0], endX, null, endX, arrowX1, null, endX, arrowX2],
+                y: [origin[1], endY, null, endY, arrowY1, null, endY, arrowY2],
                 mode: 'lines', 
                 type: 'scatter',
-                line: { color, width: 3 },
+                line: { color, width: 3.5 },
                 name,
-                hovertemplate: `${name}: (${vec[0].toFixed(2)}, ${vec[1].toFixed(2)})<extra></extra>`,
+                hovertemplate: `${name} = (${vec[0].toFixed(2)}, ${vec[1].toFixed(2)})<extra></extra>`,
                 showlegend: true
             };
         }
 
-        const vfTrace = arrowTrace([xStar, yStar], gradF, '#0000FF', '∇f');
-        const vwTrace = arrowTrace([xStar, yStar], gradW, '#00AA00', '∇w');
-        const vgTrace = arrowTrace([xStar, yStar], gradG, '#FF6600', '∇g');
+        const vfTrace = arrowTrace([xStar, yStar], gradF, '#3498db', '∇f');
+        const vwTrace = arrowTrace([xStar, yStar], gradW, '#9b59b6', '∇w');
+        const vgTrace = arrowTrace([xStar, yStar], gradG, '#f39c12', '∇g');
 
         const layout = {
             title: {
                 text: 'Curvas de nivel y restricciones',
-                font: { size: 18, color: '#2c3e50', family: 'Arial' }
+                font: { size: 20, color: '#2c3e50', family: 'Arial', weight: 'bold' }
             },
             xaxis: { 
-                title: 'x₁', 
+                title: { 
+                    text: 'x₁',
+                    font: { size: 16, color: '#34495e' }
+                },
                 range: [xmin, xmax], 
                 zeroline: true, 
-                zerolinecolor: '#999',
-                gridcolor: '#e0e0e0',
-                showgrid: true
+                zerolinecolor: '#bdc3c7',
+                zerolinewidth: 2,
+                gridcolor: '#ecf0f1',
+                showgrid: true,
+                gridwidth: 1
             },
             yaxis: { 
-                title: 'x₂', 
+                title: { 
+                    text: 'x₂',
+                    font: { size: 16, color: '#34495e' }
+                },
                 range: [ymin, ymax], 
                 zeroline: true, 
-                zerolinecolor: '#999',
-                gridcolor: '#e0e0e0',
+                zerolinecolor: '#bdc3c7',
+                zerolinewidth: 2,
+                gridcolor: '#ecf0f1',
                 showgrid: true,
+                gridwidth: 1,
                 scaleanchor: 'x',
                 scaleratio: 1
             },
@@ -404,13 +417,15 @@
                 x: 1.02, 
                 y: 1,
                 xanchor: 'left',
-                bgcolor: 'rgba(255,255,255,0.8)',
-                bordercolor: '#999',
-                borderwidth: 1
+                bgcolor: 'rgba(255,255,255,0.95)',
+                bordercolor: '#95a5a6',
+                borderwidth: 2,
+                font: { size: 12, family: 'Arial' }
             },
-            margin: { l: 60, r: 150, t: 60, b: 50 },
+            margin: { l: 70, r: 180, t: 70, b: 60 },
             plot_bgcolor: '#ffffff',
-            paper_bgcolor: '#f8f9fa'
+            paper_bgcolor: '#f8f9fa',
+            hovermode: 'closest'
         };
 
         const config = {
