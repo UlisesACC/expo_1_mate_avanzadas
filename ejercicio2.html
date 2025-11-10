@@ -83,6 +83,43 @@
             margin: 40px 0;
             border: none;
         }
+        
+        .solution-box {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 5px solid #28a745;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .solution-box::before {
+            content: "🔧";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+        }
+        
+        .case-box {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #cce5ff 0%, #b3d9ff 100%);
+            border-left: 5px solid #007bff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -141,6 +178,56 @@
                     <b>iv)</b>
                     $$\mu g(x_1, x_2) = 0 \Rightarrow \mu(x_1 + 0.2x_2 - 3) = 0$$
                     $$\mu \geq 0$$
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="solution-box">
+                <h2><b>Resolución por Casos:</b></h2>
+                
+                <div class="case-box">
+                    <h3><b>Suponiendo que μ = 0, se tiene:</b></h3>
+                    <p>
+                        $$0.5x_1 - \lambda + \mu = 0 \quad \Rightarrow \quad 0.5x_1 - \lambda = 0$$
+                        $$2x_2 - \lambda + 0.2\mu = 0 \quad \Rightarrow \quad 2x_2 - \lambda = 0$$
+                        $$5 - x_1 - x_2 = 0 \quad \Rightarrow \quad 5 - x_1 - x_2 = 0$$
+                    </p>
+                    
+                    <div class="result-box">
+                        <p><strong>Solución:</strong></p>
+                        $$x_1 = 4, \quad x_2 = 1, \quad \lambda = 2$$
+                    </div>
+                    
+                    <p><b>Sin embargo:</b></p>
+                    <p>
+                        $$iii) \quad g(x_1, x_2) \leq 0 \quad \Rightarrow \quad x_1 + 0.2x_2 - 3 \leq 0$$
+                        $$x_1 + 0.2x_2 - 3 = 4 + 0.2 \times 1 - 3 = 1.2 \geq 0, \text{ <span class="highlight">no cumple la condición</span> } (iii)$$
+                    </p>
+                </div>
+                
+                <div class="case-box">
+                    <h3><b>Suponiendo que μ > 0, entonces g(x₁, x₂) = 0</b></h3>
+                    <p>
+                        $$x_1 + 0.2x_2 - 3 = 0$$
+                        $$5 - x_1 - x_2 = 0$$
+                    </p>
+                    
+                    <div class="result-box">
+                        <p><strong>Solución:</strong></p>
+                        $$x_1 = 2.5, \quad x_2 = 2.5$$
+                    </div>
+                    
+                    <p><b>Entonces:</b></p>
+                    <p>
+                        $$0.5x_1 - \lambda + \mu = 0$$
+                        $$2x_2 - \lambda + 0.2\mu = 0$$
+                    </p>
+                    
+                    <div class="result-box">
+                        <p><strong>Multiplicadores:</strong></p>
+                        $$\lambda = 5.9375, \quad \mu = 4.6875$$
+                    </div>
                 </div>
             </div>
         </div>
