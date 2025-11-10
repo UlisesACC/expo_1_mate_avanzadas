@@ -279,7 +279,7 @@
         }
 
         // Rango y malla
-        const xmin = -1, xmax = 6, ymin = -1, ymax = 8, step = 0.05;
+        const xmin = -1, xmax = 6, ymin = -1, ymax = 6, step = 0.1;
         const X = [], Y = [];
         for (let x = xmin; x <= xmax; x += step) X.push(+x.toFixed(2));
         for (let y = ymin; y <= ymax; y += step) Y.push(+y.toFixed(2));
@@ -291,61 +291,136 @@
             Z.push(row);
         }
 
-        // Curvas de nivel de f
+        // Curvas de nivel de f con colores
         const contour = {
             x: X,
             y: Y,
             z: Z,
             type: 'contour',
-            contours: { coloring: 'lines', showlabels: true, labelfont: { size: 10, color: '#2c3e50' } },
-            line: { width: 1, color: 'rgba(52,58,64,0.6)' },
-            name: 'f(x₁,x₂)'
+            contours: { 
+                coloring: 'heatmap',
+                showlabels: true, 
+                labelfont: { size: 11, color: 'white' }
+            },
+            colorscale: 'Jet',
+            showscale: true,
+            name: 'f(x₁,x₂)',
+            hovertemplate: 'x₁: %{x}<br>x₂: %{y}<br>f: %{z:.2f}<extra></extra>'
         };
 
-        // Restricciones w(x)=0: 5 - x1 - x2 = 0  =>  x2 = 5 - x1
-        const wLine = { x: [], y: [], mode: 'lines', type: 'scatter', line: { color: '#2ecc71', width: 3 }, name: 'w(x)=0' };
-        for (let x = xmin; x <= xmax; x += 0.02) { wLine.x.push(x); wLine.y.push(5 - x); }
+        // Restricción w(x)=0: 5 - x1 - x2 = 0  =>  x2 = 5 - x1
+        const wLine = { 
+            x: [], y: [], 
+            mode: 'lines', 
+            type: 'scatter', 
+            line: { color: '#000000', width: 3, dash: 'solid' }, 
+            name: 'w(x)=0 (5-x₁-x₂=0)'
+        };
+        for (let x = xmin; x <= xmax; x += 0.02) { 
+            wLine.x.push(x); 
+            wLine.y.push(5 - x); 
+        }
 
         // Restricción g(x)=0: x1 + 0.2 x2 - 3 = 0  =>  x2 = (3 - x1)/0.2 = 15 - 5x1
-        const gLine = { x: [], y: [], mode: 'lines', type: 'scatter', line: { color: '#e67e22', width: 3 }, name: 'g(x)=0' };
-        for (let x = xmin; x <= xmax; x += 0.02) { gLine.x.push(x); gLine.y.push(15 - 5*x); }
+        const gLine = { 
+            x: [], y: [], 
+            mode: 'lines', 
+            type: 'scatter', 
+            line: { color: '#000000', width: 3, dash: 'dash' }, 
+            name: 'g(x)=0 (x₁+0.2x₂-3=0)'
+        };
+        for (let x = xmin; x <= xmax; x += 0.02) { 
+            const y2 = 15 - 5*x;
+            if (y2 >= ymin && y2 <= ymax) {
+                gLine.x.push(x); 
+                gLine.y.push(y2);
+            }
+        }
 
         // Punto óptimo
         const xStar = 2.5, yStar = 2.5, fStar = f(xStar, yStar);
         const optimum = {
-            x: [xStar], y: [yStar], mode: 'markers+text', type: 'scatter',
-            text: [`x* = (2.5, 2.5)\n f* = ${fStar.toFixed(4)}`], textposition: 'bottom right',
-            marker: { size: 10, color: '#e74c3c' }, name: 'Óptimo'
+            x: [xStar], y: [yStar], 
+            mode: 'markers+text', 
+            type: 'scatter',
+            text: [`(2.5, 2.5)`], 
+            textposition: 'top right',
+            textfont: { size: 14, color: '#000000', family: 'Arial Black' },
+            marker: { size: 12, color: '#FF0000', symbol: 'circle', line: { color: '#000000', width: 2 } }, 
+            name: 'x* óptimo'
         };
 
         // Vectores gradiente en el punto óptimo (escalados para visualización)
         const gradF = [0.5*xStar, 2*yStar];     // (1.25, 5)
         const gradW = [-1, -1];                 // (-1, -1)
         const gradG = [1, 0.2];                 // (1, 0.2)
-        const s = 0.5; // factor de escala para visualizar
+        const s = 0.6; // factor de escala para visualizar
 
         function arrowTrace(origin, vec, color, name) {
+            const endX = origin[0] + s*vec[0];
+            const endY = origin[1] + s*vec[1];
+            
             return {
-                x: [origin[0], origin[0] + s*vec[0]],
-                y: [origin[1], origin[1] + s*vec[1]],
-                mode: 'lines+markers', type: 'scatter',
-                line: { color, width: 3 }, marker: { size: 6, color }, name
+                x: [origin[0], endX],
+                y: [origin[1], endY],
+                mode: 'lines', 
+                type: 'scatter',
+                line: { color, width: 3 },
+                name,
+                hovertemplate: `${name}: (${vec[0].toFixed(2)}, ${vec[1].toFixed(2)})<extra></extra>`,
+                showlegend: true
             };
         }
 
-        const vfTrace = arrowTrace([xStar, yStar], gradF, '#8e44ad', '∇f');
-        const vwTrace = arrowTrace([xStar, yStar], gradW, '#16a085', '∇w');
-        const vgTrace = arrowTrace([xStar, yStar], gradG, '#d35400', '∇g');
+        const vfTrace = arrowTrace([xStar, yStar], gradF, '#0000FF', '∇f');
+        const vwTrace = arrowTrace([xStar, yStar], gradW, '#00AA00', '∇w');
+        const vgTrace = arrowTrace([xStar, yStar], gradG, '#FF6600', '∇g');
 
         const layout = {
-            title: 'Curvas de nivel y restricciones',
-            xaxis: { title: 'x₁', range: [xmin, xmax], zeroline: true, zerolinecolor: '#999' },
-            yaxis: { title: 'x₂', range: [ymin, ymax], zeroline: true, zerolinecolor: '#999' },
-            legend: { orientation: 'h', x: 0.02, y: 1.08 },
-            margin: { l: 50, r: 20, t: 50, b: 40 }
+            title: {
+                text: 'Curvas de nivel y restricciones',
+                font: { size: 18, color: '#2c3e50', family: 'Arial' }
+            },
+            xaxis: { 
+                title: 'x₁', 
+                range: [xmin, xmax], 
+                zeroline: true, 
+                zerolinecolor: '#999',
+                gridcolor: '#e0e0e0',
+                showgrid: true
+            },
+            yaxis: { 
+                title: 'x₂', 
+                range: [ymin, ymax], 
+                zeroline: true, 
+                zerolinecolor: '#999',
+                gridcolor: '#e0e0e0',
+                showgrid: true,
+                scaleanchor: 'x',
+                scaleratio: 1
+            },
+            legend: { 
+                orientation: 'v', 
+                x: 1.02, 
+                y: 1,
+                xanchor: 'left',
+                bgcolor: 'rgba(255,255,255,0.8)',
+                bordercolor: '#999',
+                borderwidth: 1
+            },
+            margin: { l: 60, r: 150, t: 60, b: 50 },
+            plot_bgcolor: '#ffffff',
+            paper_bgcolor: '#f8f9fa'
         };
 
-        Plotly.newPlot('plot2d', [contour, wLine, gLine, optimum, vfTrace, vwTrace, vgTrace], layout, {displayModeBar: true, responsive: true});
+        const config = {
+            displayModeBar: true, 
+            responsive: true,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['select2d', 'lasso2d']
+        };
+
+        Plotly.newPlot('plot2d', [contour, wLine, gLine, optimum, vfTrace, vwTrace, vgTrace], layout, config);
 
         // Redimensionamiento responsivo
         window.addEventListener('resize', () => Plotly.Plots.resize(document.getElementById('plot2d')));
