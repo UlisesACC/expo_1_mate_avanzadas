@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación No Lineal - Ejemplo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="Line-Graph_41751.ico">
+    <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* Estilos específicos para este ejemplo */
+        .problem-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid #2c3e50;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .problem-box::before {
+            content: "📊";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+        }
+        
+        .lagrange-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid #f39c12;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .lagrange-box::before {
+            content: "⚙️";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+        }
+        
+        .conditions-box {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border-left: 5px solid #17a2b8;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .conditions-box::before {
+            content: "🔍";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+        }
+        
+        .condition-item {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 8px;
+        }
+        
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3498db, transparent);
+            margin: 40px 0;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Programación No Lineal</h1>
+        </div>
+        <div class="content">
+            <div class="problem-box">
+                <h2><b>Ejemplo</b></h2>
+                <p>
+                    <b>Minimizar:</b>
+                    $$f(x_1, x_2) = 0.25x_1^2 + x_2^2$$
+                </p>
+                <p>
+                    <b>Sujeto a:</b>
+                    $$w(x_1, x_2) = 5 - x_1 - x_2 = 0$$
+                    $$g(x_1, x_2) = x_1 + 0.2x_2 - 3 \leq 0$$
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="lagrange-box">
+                <h2><b>Ecuación de Lagrange:</b></h2>
+                <p>
+                    $$L(x_1, x_2, \lambda, \mu) = f(x_1, x_2) + \lambda w(x_1, x_2) + \mu g(x_1, x_2)$$
+                </p>
+                <p>
+                    $$L(x_1, x_2, \lambda, \mu) = 0.25x_1^2 + x_2^2 + \lambda(5 - x_1 - x_2) + \mu(x_1 + 0.2x_2 - 3)$$
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="conditions-box">
+                <h2><b>Condiciones:</b></h2>
+                
+                <div class="condition-item">
+                    <b>i)</b>
+                    $$\frac{\partial L(x_1, x_2, \lambda, \mu)}{\partial x_1} = 0 \Rightarrow 0.5x_1 - \lambda + \mu = 0$$
+                    $$\frac{\partial L(x_1, x_2, \lambda, \mu)}{\partial x_2} = 0 \Rightarrow 2x_2 - \lambda + 0.2\mu = 0$$
+                </div>
+
+                <div class="condition-item">
+                    <b>ii)</b>
+                    $$\frac{\partial L(x_1, x_2, \lambda, \mu)}{\partial \lambda} = 0 \Rightarrow 5 - x_1 - x_2 = 0$$
+                </div>
+
+                <div class="condition-item">
+                    <b>iii)</b>
+                    $$g(x_1, x_2) \leq 0 \Rightarrow x_1 + 0.2x_2 - 3 \leq 0$$
+                </div>
+
+                <div class="condition-item">
+                    <b>iv)</b>
+                    $$\mu g(x_1, x_2) = 0 \Rightarrow \mu(x_1 + 0.2x_2 - 3) = 0$$
+                    $$\mu \geq 0$$
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
